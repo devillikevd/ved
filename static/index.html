@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VaidiDea Health Library - Diseases & Conditions</title>
+    <meta name="description" content="Comprehensive medical database with 98,000+ diseases. Search by alphabet, symptoms, or medical category.">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ─── HEADER ─────────────────────────────────────────── -->
+    <header id="mainHeader">
+        <div class="header-inner">
+            <a href="/" class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <span class="logo-name">Vaidi<strong>Dea</strong></span>
+            </a>
+            <nav id="mainNav">
+                <a href="#categories" class="nav-link">Categories</a>
+                <a href="#alphabet" class="nav-link active">A-Z Index</a>
+                <a href="#" class="nav-link">Symptoms Guide</a>
+            </nav>
+            <div class="header-right">
+                <div class="stat-pill" id="headerStat">Loading...</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ─── HERO ───────────────────────────────────────────── -->
+    <section class="hero" id="hero">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content">
+            <p class="hero-tag">Trusted Medical Knowledge Base</p>
+            <h1>Find Diseases &amp; Conditions</h1>
+            <p class="hero-sub">Search our database of <strong id="heroCount">98,000+</strong> medical conditions by name, symptom, or ICD-10 code.</p>
+            <div class="search-wrap">
+                <div class="search-box" id="searchBox">
+                    <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="searchInput" placeholder="e.g. Diabetes, Fever, Asthma, E11..." autocomplete="off">
+                    <button id="searchBtn" class="search-btn">Search</button>
+                </div>
+                <div class="search-suggestions" id="searchSuggestions">
+                    <span class="suggestion" data-q="diabetes">Diabetes</span>
+                    <span class="suggestion" data-q="fever">Fever</span>
+                    <span class="suggestion" data-q="cancer">Cancer</span>
+                    <span class="suggestion" data-q="pain">Pain</span>
+                    <span class="suggestion" data-q="asthma">Asthma</span>
+                    <span class="suggestion" data-q="infection">Infection</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-container">
+
+        <!-- ─── STATS BAR ──────────────────────────────────── -->
+        <section class="stats-bar" id="statsBar">
+            <div class="stat-card">
+                <div class="stat-number" id="statDiseases">-</div>
+                <div class="stat-label">Total Diseases</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statCategories">-</div>
+                <div class="stat-label">Medical Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statCritical">-</div>
+                <div class="stat-label">Critical Conditions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statSevere">-</div>
+                <div class="stat-label">Severe Conditions</div>
+            </div>
+        </section>
+
+        <!-- ─── CATEGORIES ─────────────────────────────────── -->
+        <section class="section" id="categories">
+            <div class="section-header">
+                <h2>Browse by Medical Category</h2>
+                <p class="section-sub">Explore diseases organized by body system and medical specialty</p>
+            </div>
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- JS fills -->
+            </div>
+        </section>
+
+        <!-- ─── ALPHABET ───────────────────────────────────── -->
+        <section class="section" id="alphabet">
+            <div class="section-header">
+                <h2>Find by First Letter</h2>
+                <p class="section-sub">Click any letter to browse diseases alphabetically</p>
+            </div>
+            <div class="alphabet-bar" id="alphabetBar">
+                <!-- JS fills A-Z -->
+            </div>
+        </section>
+
+        <!-- ─── RESULTS ────────────────────────────────────── -->
+        <section class="section" id="resultsSection" style="display:none;">
+            <div class="results-top">
+                <div class="results-info">
+                    <h2 id="resultsTitle">Results</h2>
+                    <span class="badge" id="resultsBadge">0</span>
+                </div>
+                <div class="results-controls">
+                    <select id="severityFilter" class="filter-select">
+                        <option value="">All Severities</option>
+                        <option value="Critical">Critical</option>
+                        <option value="Severe">Severe</option>
+                        <option value="Moderate">Moderate</option>
+                        <option value="General">General</option>
+                    </select>
+                    <button id="prevPage" class="page-btn" disabled>&lt; Prev</button>
+                    <span id="pageInfo" class="page-info">Page 1</span>
+                    <button id="nextPage" class="page-btn">Next &gt;</button>
+                </div>
+            </div>
+
+            <div class="loader" id="loader">
+                <div class="loader-spinner"></div>
+                <p>Searching medical database...</p>
+            </div>
+
+            <div class="results-grid" id="resultsGrid"></div>
+        </section>
+
+        <!-- ─── DISEASE DETAIL MODAL ───────────────────────── -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal" id="diseaseModal">
+                <button class="modal-close" id="modalClose">&times;</button>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ─── FOOTER ─────────────────────────────────────────── -->
+    <footer>
+        <div class="footer-inner">
+            <p>VaidiDea Health Library &mdash; Powered by ICD-10-CM &bull; 98,000+ Conditions &bull; MedlinePlus</p>
+            <p class="footer-small">Data sourced from WHO ICD-10-CM classification. For informational purposes only.</p>
+        </div>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Database
+# We don't push the massive generated database. 
+# Users should run `python database/setup_sqlite.py`
+database/*.db
+database/*.db-journal
+
+# Output files
+database.md
+database_all.md
+
+# OS files
+.DS_Store
+Thumbs.db
