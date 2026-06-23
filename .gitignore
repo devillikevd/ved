@@ -11,12 +11,6 @@ __pycache__/
 *$py.class
 *.so
 
-# Database
-# We don't push the massive generated database. 
-# Users should run `python database/setup_sqlite.py`
-database/*.db
-database/*.db-journal
-
 # Output files
 database.md
 database_all.md

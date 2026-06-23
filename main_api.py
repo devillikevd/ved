@@ -90,10 +90,14 @@ async def search_diseases(q: str = Query(..., min_length=2), page: int = 1, limi
         (pattern, pattern, pattern, pattern, limit, offset)
     ).fetchall()
 
-    # Log search
-    conn.execute("INSERT INTO search_stats (query, result_count) VALUES (?, ?)", (q, total))
-    conn.commit()
-    conn.close()
+    # Log search (safely ignore read-only errors on Vercel)
+    try:
+        conn.execute("INSERT INTO search_stats (query, result_count) VALUES (?, ?)", (q, total))
+        conn.commit()
+    except sqlite3.OperationalError:
+        pass # Ignored on read-only environments like Vercel
+    finally:
+        conn.close()
     return {"total": total, "page": page, "limit": limit, "results": [dict(r) for r in rows]}
 
 
@@ -218,15 +222,19 @@ async def get_disease_ai_details(code: str):
         await asyncio.sleep(1.5)
         overview, symptoms, causes, medicines, home_remedies, prevention, when_to_see_doctor = generate_mock_details(name, chapter)
         
-    # Cache the results in the database
-    conn.execute(
-        """UPDATE diseases SET 
-           overview = ?, symptoms = ?, causes = ?, medicines = ?, home_remedies = ?, prevention = ?, when_to_see_doctor = ?
-           WHERE code = ?""",
-        (overview, symptoms, causes, medicines, home_remedies, prevention, when_to_see_doctor, code)
-    )
-    conn.commit()
-    conn.close()
+    # Cache the results in the database (safely ignore read-only errors on Vercel)
+    try:
+        conn.execute(
+            """UPDATE diseases SET 
+               overview = ?, symptoms = ?, causes = ?, medicines = ?, home_remedies = ?, prevention = ?, when_to_see_doctor = ?
+               WHERE code = ?""",
+            (overview, symptoms, causes, medicines, home_remedies, prevention, when_to_see_doctor, code)
+        )
+        conn.commit()
+    except sqlite3.OperationalError:
+        pass # Ignored on read-only environments like Vercel
+    finally:
+        conn.close()
     
     disease_dict["overview"] = overview
     disease_dict["symptoms"] = symptoms
